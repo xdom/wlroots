@@ -94,12 +94,13 @@ static void data_offer_handle_accept(struct wl_client *client,
 static void data_offer_handle_receive(struct wl_client *client,
 		struct wl_resource *resource, const char *mime_type, int32_t fd) {
 	struct wlr_data_offer *offer = data_offer_from_resource(resource);
-	if (offer == NULL) {
+	if (offer == NULL || offer->locked) {
 		close(fd);
 		return;
 	}
 
 	wlr_data_source_send(offer->source, mime_type, fd);
+	offer->locked = true;
 }
 
 static void data_offer_source_dnd_finish(struct wlr_data_offer *offer) {
@@ -249,6 +250,7 @@ struct wlr_data_offer *data_offer_create(struct wl_resource *device_resource,
 	}
 	offer->source = source;
 	offer->type = type;
+	offer->locked = true;
 
 	struct wl_client *client = wl_resource_get_client(device_resource);
 	uint32_t version = wl_resource_get_version(device_resource);

@@ -48,6 +48,7 @@ struct wlr_data_offer {
 	uint32_t actions;
 	enum wl_data_device_manager_dnd_action preferred_action;
 	bool in_ask;
+	bool locked;
 
 	struct wl_listener source_destroy;
 };
@@ -263,5 +264,7 @@ void wlr_data_source_dnd_finish(struct wlr_data_source *source);
  */
 void wlr_data_source_dnd_action(struct wlr_data_source *source,
 	enum wl_data_device_manager_dnd_action action);
+
+void wlr_seat_unlock_data_offers(struct wlr_seat *seat);
 
 #endif

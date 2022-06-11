@@ -312,3 +312,10 @@ struct wlr_data_device_manager *wlr_data_device_manager_create(
 
 	return manager;
 }
+
+void wlr_seat_unlock_data_offers(struct wlr_seat *seat) {
+	struct wlr_data_offer *offer;
+	wl_resource_for_each(offer, &seat->selection_offers) {
+		offer->locked = false;
+	}
+}
